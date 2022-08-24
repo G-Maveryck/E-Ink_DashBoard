@@ -11,18 +11,20 @@ Definition of the specific methods for the Display Class.
  Display::Display() : GxEPD2_BW<GxEPD2_154_D67, MAX_HEIGHT(GxEPD2_154_D67)>(GxEPD2_154_D67(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7))
  {       
  }
+
     
  void Display::setUp()
  {
-   // Display::init(115200, false, 2, false);      // Initiate the display
-    Display::init(115200); 
-
+    //Display::init(115200, true, 2, false);      // Initiate the display
+    //Display::init(115200); 
+    Display::setFullWindow();
     Display::setRotation(1);                    // Set orientation. Goes from 0, 1, 2 or 3
+
     Display::setTextWrap(false); 
     Display::setFont(&FreeMonoBold12pt7b);
     Display::setTextColor(GxEPD_BLACK);
 
-    Display::setFullWindow();
+    
     Display::firstPage();
     do
     {

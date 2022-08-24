@@ -27,7 +27,7 @@ class Display : public GxEPD2_BW<GxEPD2_154_D67, MAX_HEIGHT(GxEPD2_154_D67)>    
 
     
     private:
-    int16_t m_lastTemp;
+   // int16_t m_lastTemp;
 
 };
 

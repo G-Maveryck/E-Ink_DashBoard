@@ -14,12 +14,13 @@
 
 
 
-Display display;
+static Display display;
 
 
 void setup() 
 {
   // put your setup code here, to run once:
+  display.init(15200, true, 2, false);
   display.setUp();
   delay(1000);
   
@@ -34,28 +35,31 @@ void loop()
   
   static uint32_t time = 0;
   static uint32_t l_time = 0;
-
+  
+  
   time = millis();
 
-  if (time - l_time >= 1)
+  if (time - l_time >= 1000)
   {
     l_time = time;
-
-    display.setRotation(1);
-    display.setTextColor(GxEPD_BLACK);
-    display.setFont(&FreeMonoBold12pt7b);
-
-    display.setPartialWindow(80, 0, 200, 200);
+    
+    display.setPartialWindow(50, 50, 68, 68);
     display.firstPage();
     do
     {
-        display.setCursor(115, 50);
-        display.print("TEST ");
+      
+        
+      display.fillScreen(GxEPD_BLACK);
+      display.fillRect(75, 75, 50, 50, GxEPD_BLACK);
+     
   
     } while (display.nextPage());
+
+   
     
   }
 
+ 
 
 }
  /*
