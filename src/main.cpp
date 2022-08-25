@@ -8,22 +8,51 @@
 //GxEPD2_BW<GxEPD2_154, MAX_HEIGHT(GxEPD2_154)> display.GxEPD2_154(/*CS=10*/ SS, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)); // GDEP015OC1 no longer available
 //GxEPD2_BW<GxEPD2_154_D67, MAX_HEIGHT(GxEPD2_154_D67)> display.GxEPD2_154_D67(/*CS=10*/ SS, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)); // GDEH0154D67
 
-#include "display.h"    //Include the specific class to handle the display.as a Dashboard
+//#include "Display.h"    //Include the specific class to handle the display.as a Dashboard
+
 #include <Fonts/FreeMonoBold12pt7b.h>
 
+#include <Adafruit_GFX.h>
+#include <GxEPD2_BW.h>
+#include "epd/GxEPD2_154_D67.h"
+
+
+#define ENABLE_GxEPD2_GFX 0
+#define MAX_DISPLAY_BUFFER_SIZE 200
+#define MAX_HEIGHT(EPD) (EPD::HEIGHT <= MAX_DISPLAY_BUFFER_SIZE / (EPD::WIDTH / 8) ? EPD::HEIGHT : MAX_DISPLAY_BUFFER_SIZE / (EPD::WIDTH / 8))
 
 
 
-static Display display;
+
+GxEPD2_BW<GxEPD2_154_D67, MAX_HEIGHT(GxEPD2_154_D67)> display(GxEPD2_154_D67(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7));
 
 
 void setup() 
 {
   // put your setup code here, to run once:
-  display.init(15200, true, 2, false);
-  display.setUp();
-  delay(1000);
+  display.init(15200);
+  delay(100);
   
+  display.setFullWindow();
+  display.setRotation(1);
+
+  display.setTextWrap(false); 
+  display.setFont(&FreeMonoBold12pt7b);
+  display.setTextColor(GxEPD_BLACK);
+    //Basic configuration for the display
+    
+  display.firstPage();
+  do
+  {
+      //Draw "hud" Elements, two lines and the label "Sec :"
+      display.drawFastHLine(0, 100, 200, GxEPD_BLACK);
+      display.drawFastVLine(100, 100, -100, GxEPD_BLACK);
+      
+      display.setCursor(15,50);
+      display.print("Sec :");
+
+  } while (display.nextPage());
+    
  
 
 }
@@ -34,23 +63,28 @@ void loop()
 {
   
   static uint32_t time = 0;
-  static uint32_t l_time = 0;
+  static uint32_t l_time = 0;   //l_time stand for 'Last Time'
   
   
-  time = millis();
+  time = millis();              //store the actual time.
 
-  if (time - l_time >= 1000)
+  if (time - l_time >= 1000)    //Verify a gap of 1sec, then, command the display.
   {
-    l_time = time;
+    l_time = time;              //store the actual time in 'Last Time' to détermine the next gap
     
-    display.setPartialWindow(50, 50, 68, 68);
+    
+    display.setPartialWindow(100, 0, 98, 98);   // <-- don't want to work...
+    display.setRotation(1);
+    display.setFont(&FreeMonoBold12pt7b);
+    display.setTextColor(GxEPD_BLACK);          //Configuration again. Don't know if it's needed. I just looked at how some other people code were built...
+
     display.firstPage();
     do
     {
       
-        
-      display.fillScreen(GxEPD_BLACK);
-      display.fillRect(75, 75, 50, 50, GxEPD_BLACK);
+      display.fillScreen(GxEPD_WHITE);    //Clean the previous display in the 
+      display.setCursor(115, 50);
+      display.print(time/1000);           // print the time value in front of the "Sec" label.
      
   
     } while (display.nextPage());
@@ -58,63 +92,8 @@ void loop()
    
     
   }
+        //this whole loop don't display anything. I don't know why...
 
- 
 
 }
- /*
-
-
-  static int Variable1 = 0;
-  static int tour = 0;
-
-  Variable1++;  // Increase variable by 1
-  if(Variable1 > 150)  // If Variable1 is greater than 150
-  {
-    Variable1 = 0;  // Set Variable1 to 0
-    tour++;
-
-    display.setFullWindow();  // Set full window mode, meaning is going to update the entire screen
-
-    // Here we use paged drawing, even if the processor has enough RAM for full buffer
-    // so this can be used with any supported processor board.
-    // the cost in code overhead and execution time penalty is marginal
-    display.firstPage();  // Tell the graphics class to use paged drawing mode
-    do
-    {
-      display.fillScreen(GxEPD_WHITE);
-
-      display.fillRect(0, 120, 50, 70, GxEPD_BLACK);
-      display.fillRect(60, 120, 50, 70, GxEPD_BLACK);
-      display.fillRect(120, 120, 50, 70, GxEPD_BLACK);
-
-      display.setTextColor(GxEPD_BLACK);
-      display.setFont(&FreeMonoBold12pt7b);
-      display.setCursor(15, 15);
-
-      display.print(tour);
-      display.println(" tours effectues.");
-      
-    }
-    // Tell the graphics class to transfer the buffer content (page) to the controller buffer.
-    // The graphics class will command the controller to refresh to the screen when the last
-    // page has been transferred.
-
-    // Returns true if more pages need be drawn and transferred.
-    // Returns false if the last page has been transferred and the screen refreshed for
-    // panels without fast partial update.
-    // Returns false for panels with fast partial update when the controller buffer has
-    // been written once more, to make the differential buffers equal.
-    // For full buffered with fast partial update the (full) buffer is just transferred
-    // again, and false returned.
-    while (display.nextPage());  // Print everything we set previously
-  }
-
  
-
-
-*/
-  
-
-
-  
