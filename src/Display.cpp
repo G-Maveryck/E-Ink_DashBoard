@@ -8,12 +8,12 @@ Definition of the specific methods for the Display Class.
 
 
     //Constructor - Call the constructor of parent class for my specific Display
- Display::Display() : GxEPD2_BW<GxEPD2_154_D67, MAX_HEIGHT(GxEPD2_154_D67)>(GxEPD2_154_D67(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7))
+ Display::Display() : GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>(GxEPD2_150_BN(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7))
  {       
  }
 
     
- void Display::setUp()
+ void Display::setUpHud()
  {
     //Display::init(115200, true, 2, false);      // Initiate the display
     //Display::init(115200); 
@@ -40,24 +40,22 @@ Definition of the specific methods for the Display Class.
 
  }
 
- void Display::dispTime(int _time)
+ void Display::dispTime(uint32_t* _time)
  {
     
-    
-    Display::setRotation(1);
     Display::setFont(&FreeMonoBold12pt7b);
     Display::setTextColor(GxEPD_BLACK);
     
-    Display::setPartialWindow(80, 0, 98, 98);
-   // Display::setFullWindow();
+    Display::setRotation(1);
+    Display::setPartialWindow(108, 8, 78, 78);
+   
     Display::firstPage();
     do
     {
        
-        //Display::fillScreen(GxEPD_WHITE);
+        Display::fillScreen(GxEPD_WHITE);
         Display::setCursor(115, 50);
-        Display::print("TEST ");
-        Display::println(_time);
+        Display::print(*_time);
         
         
     } while (Display::nextPage());
