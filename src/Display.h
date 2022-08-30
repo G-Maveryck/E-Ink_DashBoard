@@ -19,15 +19,23 @@ class Display : public GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>    //
 {
     public:
 
-    Display();      //Constructeur
+    Display();                          // Constructeur
     
-    void setUpHud();   //Configure the e-paper display, refresh it, and draw HUD elements
+    void setUpHud();                    // Refresh the E-Paper display and draw HUD elements with static parameters. For starup only.
+    void dispTemp(float &_temp);        // Display the temperature, in a simple way, in is own area. This method handle all the specific instruction for the display.
+    
+    
+    
+    
+    
+    
+    
+        // Test method
     void dispTime(uint32_t* _time);
 
 
-    
     private:
-   // int16_t m_lastTemp;
+    float m_lastTemp;
 
 };
 

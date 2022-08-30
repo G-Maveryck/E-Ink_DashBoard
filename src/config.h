@@ -5,7 +5,6 @@
 // Enable or disable GxEPD2_GFX base class:
 #define ENABLE_GxEPD2_GFX 0
 
-
 // Arduino:
 
 #define MAX_DISPLAY_BUFFER_SIZE 200
