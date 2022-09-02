@@ -14,18 +14,27 @@
 // DallasTemperature sensors (&onewire);
 
 static Display display;
-static TimeGap tempSensorGap(1000);
+static TimeGap timerSensor(1000);
+
 
 void setup() 
 {
   // put your setup code here, to run once:
 
-  display.init(115200);
-  delay(100);
+  display.begin(115200);
+  //delay(100);
 
   display.setUpHud();
   delay(1000);
 
+  display.dispGasLevel(6);
+  delay(1000);
+
+  display.dispGasLevel(3);
+  display.dispGasLevel(1);
+  delay(1000);
+
+  display.dispGasLevel(0);
 
 }
 
@@ -35,9 +44,9 @@ void loop()
 {
   
     
-  if (tempSensorGap.gap())    //  Verify a gap of 1sec, than ask the sensor.
+  if (timerSensor.gap())    //  Verify a gap of 1sec, than ask the sensor.
   { 
-    float tempC = 0;
+    int16_t tempC = 0;
 
     tempC = getTemp();
     display.dispTemp(tempC);

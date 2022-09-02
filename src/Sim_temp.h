@@ -12,7 +12,7 @@ Permet de tester les structures conditionnelles à implémenter dans "Display"
 #define SIM_TEMP_H
 
 #include <Arduino.h>
-
+#include "TimeGap.h"
 
 #define DELAY_INCDEC 5000
 
@@ -21,38 +21,37 @@ Permet de tester les structures conditionnelles à implémenter dans "Display"
 enum tEtat {E_INC, E_DEC};
 static tEtat etat = E_INC;
 
-float getTemp()
+TimeGap tempVarGap(5000);
+
+int16_t getTemp()
 {
-    static float T = 0;                     //Température simulée.
-    
-    static uint32_t gT_time = 0;
-    static uint32_t gT_l_time = 0;   
-    
-    gT_time = millis();             
+    static int16_t T = 0;                     //Température simulée.
 
-    if (gT_time - gT_l_time >= DELAY_INCDEC)
+    if (tempVarGap.gap())
     {
-        gT_l_time = gT_time;
-
 
         switch (etat)
         {
         case E_INC :
-            T += 1.0f;
+
+            T++;
 
             if (T >= 120)
             {
                 etat = E_DEC;
             }
+
             break;
             
         case E_DEC :
-            T-= 1.0f;
+
+            T--;
 
             if (T <= -40)
             {
                 etat = E_INC;
             }
+            
             break;
 
         /* 
