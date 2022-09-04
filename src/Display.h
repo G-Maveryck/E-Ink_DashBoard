@@ -23,8 +23,8 @@ class Display : protected GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>   
     void begin(uint32_t _bitrate);
 
     void setUpHud();                    // Refresh the E-Paper display and draw HUD elements with static parameters. For starup only.
-    void dispTemp(int16_t& _temp);        // Display the temperature, in a simple way, in is own area. This method handle all the specific instruction for the display.
-    void dispGasLevel(uint8_t _nbr);    // /!\ ATTENTION GROSSE MERDE /!\
+    void dispTemp(int16_t& _temp);      // Display the temperature, in a simple way, in is own area. This method handle all the specific instruction for the display.
+    void dispGasLevel(uint16_t _nbr);   //  Ca marche, mais c'est lent !
     
     
     void drawGauge(uint16_t PosX_R);
@@ -40,7 +40,8 @@ class Display : protected GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>   
 
     private:
     float m_lastTemp;
-    
-};
+    uint8_t m_LastGaugeState;
+
+    };
 
 

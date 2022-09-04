@@ -7,11 +7,12 @@ Definition of the specific methods for the Display Class.
 // #include <Fonts/FreeMonoBold12pt7b.h>
 #include "Screen_Config.h"
 
-//#include "LOGO_GAS.h"
 
 
     //Constructor - Call the constructor of parent class for my specific Display
- Display::Display() : GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>(GxEPD2_150_BN(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)), m_lastTemp(0)
+ Display::Display() : GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>
+ (GxEPD2_150_BN(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)), 
+ m_lastTemp(0), m_LastGaugeState(0)
  {       
  }
 
@@ -34,22 +35,22 @@ Definition of the specific methods for the Display Class.
     Display::firstPage();
     do
     {
-         //UI Element : Speparator segments.
-        Display::drawFastHLine(0, 100, 200, GxEPD_BLACK);
-        Display::drawFastVLine(100, 100, -100, GxEPD_BLACK);
+       //UI Element : Speparator segments.
+      Display::drawFastHLine(0, 100, 200, GxEPD_BLACK);
+      Display::drawFastVLine(100, 100, -100, GxEPD_BLACK);
        
          //Temp indication
-        Display::setCursor(5, 15);
-        Display::print("Temp :");
+      Display::setCursor(5, 15);
+      Display::print("Temp :");
 
-         // Fuel gauge Background
-        Display::drawRect(1, 150, 198, 50, GxEPD_BLACK);
-        Display::drawFastVLine(100, 150, -10, GxEPD_BLACK);
+       // Fuel gauge Background
+      Display::drawRect(1, 150, 198, 50, GxEPD_BLACK);      //Gauge frame
+      Display::drawFastVLine(100, 150, -10, GxEPD_BLACK);   //Middle indication
     
-        Display::setCursor(5, 140);
-        Display::print("Essence");
-
-        //Display::drawChar(gImage_LOGO_GAS);
+      Display::setCursor(5, 140);
+      Display::print("Essence");
+      //Display::drawBitmap(5, 140, gImage_LOGO_GAS, 25, 25, GxEPD_BLACK);
+        
       
         
     } while (Display::nextPage());
@@ -82,172 +83,76 @@ Definition of the specific methods for the Display Class.
  }
 
 
- void Display::dispGasLevel(uint8_t _nbr)
+ void Display::dispGasLevel(uint16_t _nbr)
  {
-   /*
-   static const uint16_t positions[6] 
+  
+      //Représentation des "etats" (affiché = NOIR, masqué = BLANC) de chaques graduation de la jauge dans un 
+   static uint16_t etatJauge[6];
+
+   // uint16_t* et1, et2, et3, et4, et5, et6;
+
+      // Assigne à chaque graduation son état, en fonction du nombre de rectangles à affiché passé en paramètre.
+      // Ca marche... Mais c'est TRES lent ! L'arduino met 2 bonnes sec avant d'afficher le résultat.
+   for (size_t i = 0; i < 6; i++)
    {
-      Px1, Px2, Px3, Px4, Px5, Px6 
-   };
-   */
-
-   switch (_nbr)
-   {
-            // BOILERPLATE AT HIS MAXIMUM
-   case 0:
-   Display::setPartialWindow(2, 152, 196, 40);
-   Display::firstPage();
-   do
-   {
-      Display::drawRoundRect(Px1, RECT_POS_Y, RECT_LARG, 38, 5, GxEPD_BLACK);
-
-      Display::setCursor(5, 185);
-      Display::print("R");
-
-
-
-   } while (Display::nextPage());
-      break;
-
-
-   case 1:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
+      if (i < _nbr)
       {
-         Display::fillScreen(GxEPD_WHITE);
+         etatJauge[i] = GxEPD_BLACK;
+      }
+      else
+      {
+         etatJauge[i] = GxEPD_WHITE;
+      }
+      
+   }
 
-         Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
 
-      } while (Display::nextPage());
-      break;
+/*
+         Tentative d'optimisation = 6 tableau statique constant,
+         et un tableau de pointeurs pour "sélectionner" l'affichage.
+
+   static const uint16_t etat3[6] 
+   {GxEPD_BLACK, GxEPD_BLACK, GxEPD_BLACK, GxEPD_WHITE, GxEPD_WHITE, GxEPD_WHITE};
+
+   static const uint16_t* etatJaugeptr[6];
+
+   for (size_t i = 0; i < 6; i++)
+   {
+      {
+         etatJaugeptr[i] = &etat3[i];
+      }
+   }
+*/
    
 
-   case 2:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
-      {
-         Display::fillScreen(GxEPD_WHITE);
-
-         Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-  
-      } while (Display::nextPage());
-      break;
-
-
-   case 3:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
-      {
-         Display::fillScreen(GxEPD_WHITE);
-
-         Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      
-      } while (Display::nextPage());
-      break;
-
-
-   case 4:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
-      {
-         Display::fillScreen(GxEPD_WHITE);
-
-         Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-
-         Display::fillRoundRect(Px4, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      
-      } while (Display::nextPage());
-      break;
-
-
-   case 5:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
-      {
-         Display::fillScreen(GxEPD_WHITE);
-
-         Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-
-         Display::fillRoundRect(Px4, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px5, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-        
-      } while (Display::nextPage());
-      break;
-
-
-   case 6:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
-      {
-         Display::fillScreen(GxEPD_WHITE);
-
-         Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-
-         Display::fillRoundRect(Px4, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px5, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         Display::fillRoundRect(Px6, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-         
-      } while (Display::nextPage());
-      break;
-
-
-   default:
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
-      {
-         Display::setCursor(40, 180);
-         Display::print("ERR");  
-      } while (Display::nextPage());
-      break;
-   }
-  
-
-   /*
+ 
    Display::setPartialWindow(2, 152, 196, 40);
    Display::firstPage();
    do
    {
+     
       Display::fillScreen(GxEPD_WHITE);
 
-      Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
+      Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[0]);
+      Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[1]);
+      Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[2]);
 
-      Display::fillRoundRect(Px4, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      Display::fillRoundRect(Px5, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      Display::fillRoundRect(Px6, RECT_POS_Y, RECT_LARG, 39, 5, GxEPD_BLACK);
-      
-
+      Display::fillRoundRect(Px4, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[3]);
+      Display::fillRoundRect(Px5, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[4]);
+      Display::fillRoundRect(Px6, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[5]);
+         
+ 
 
    } while (Display::nextPage());
-   */
+  
+
+
+
+
+
 
  }
- 
-
-
-
-
- 
- 
- 
- 
+  
  
  
  

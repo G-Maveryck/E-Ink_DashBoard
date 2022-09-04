@@ -21,13 +21,13 @@ Permet de tester les structures conditionnelles à implémenter dans "Display"
 enum tEtat {E_INC, E_DEC};
 static tEtat etat = E_INC;
 
-TimeGap tempVarGap(5000);
+TimeGap timerVariation(5000);
 
 int16_t getTemp()
 {
     static int16_t T = 0;                     //Température simulée.
 
-    if (tempVarGap.gap())
+    if (timerVariation.gap())
     {
 
         switch (etat)
@@ -36,7 +36,7 @@ int16_t getTemp()
 
             T++;
 
-            if (T >= 120)
+            if (T >= 120) 
             {
                 etat = E_DEC;
             }
