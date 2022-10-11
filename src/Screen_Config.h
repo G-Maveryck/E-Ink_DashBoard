@@ -12,32 +12,33 @@
 
 
 
-#include <Fonts/FreeSans9pt7b.h>
+//#include <Fonts/FreeSans9pt7b.h>
 
 // #include <Fonts/FreeSansBold12pt7b.h>
 
 #include <Fonts/FreeSansBold18pt7b.h>
 
-#define FONT_UI &FreeSans9pt7b
+//#define FONT_UI &FreeSans9pt7b
 #define FONT_DYN &FreeSansBold18pt7b
 
 /////////////////////////////////////
 
 
-#define NBR_RECT 6
+#define G_UNIT_TOT 6
 
-#define RECT_LARG 27
-#define RECT_MARGE 5
-#define RECT_POS_Y 154
+#define G_RAD 3
+#define G_UNIT_W 27
+#define G_UNIT_INT 5
 
 
 
-#define Px1 4
-#define Px2 (Px1 + RECT_LARG + RECT_MARGE)
-#define Px3 (Px2 + RECT_LARG + RECT_MARGE)
-#define Px4 (Px3 + RECT_LARG + RECT_MARGE + 5)
-#define Px5 (Px4 + RECT_LARG + RECT_MARGE)
-#define Px6 (Px5 + RECT_LARG + RECT_MARGE)
+#define Py1 154
+#define Px1 6
+#define Px2 (Px1 + G_UNIT_W + G_UNIT_INT)
+#define Px3 (Px2 + G_UNIT_W + G_UNIT_INT)
+#define Px4 (Px3 + G_UNIT_W + G_UNIT_INT)
+#define Px5 (Px4 + G_UNIT_W + G_UNIT_INT)
+#define Px6 (Px5 + G_UNIT_W + G_UNIT_INT)
 
 
 

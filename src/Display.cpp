@@ -6,8 +6,8 @@ Definition of the specific methods for the Display Class.
 #include "Display.h"
 // #include <Fonts/FreeMonoBold12pt7b.h>
 #include "Screen_Config.h"
-
-
+#include "Bitmaps.h"
+#include "Timer.h"
 
     //Constructor - Call the constructor of parent class for my specific Display
  Display::Display() : GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>
@@ -16,143 +16,161 @@ Definition of the specific methods for the Display Class.
  {       
  }
 
+ Display::~Display()
+ {
+ }
+
  void Display::begin(uint32_t _bitrate)
 {
    Display::init(_bitrate);
 }
-    
+
  void Display::setUpHud()
  {
-    //Display::init(115200, true, 2, false);      // Initiate the display
-    //Display::init(115200); 
+
     Display::setFullWindow();
-    Display::setRotation(1);                    // Set orientation. Goes from 0, 1, 2 or 3
+    Display::setRotation(1);                  // Set orientation. Goes from 0, 1, 2 or 3
 
     Display::setTextWrap(false); 
-    Display::setFont(FONT_UI);
     Display::setTextColor(GxEPD_BLACK);
 
     Display::firstPage();
     do
     {
-       //UI Element : Speparator segments.
+         //UI Element : Speparator segments.
       Display::drawFastHLine(0, 100, 200, GxEPD_BLACK);
       Display::drawFastVLine(100, 100, -100, GxEPD_BLACK);
        
-         //Temp indication
-      Display::setCursor(5, 15);
-      Display::print("Temp :");
+         //Temp indication     
+      Display::drawBitmap(2, 2, epd_bitmap_Logo_Temp_35px, 35, 35, GxEPD_BLACK);
 
        // Fuel gauge Background
-      Display::drawRect(1, 150, 198, 50, GxEPD_BLACK);      //Gauge frame
-      Display::drawFastVLine(100, 150, -10, GxEPD_BLACK);   //Middle indication
-    
-      Display::setCursor(5, 140);
-      Display::print("Essence");
-      //Display::drawBitmap(5, 140, gImage_LOGO_GAS, 25, 25, GxEPD_BLACK);
-        
+      Display::drawRect(1, 150, 198, 50, GxEPD_BLACK);      // Gauge frame
+      Display::drawFastVLine(100, 150, -10, GxEPD_BLACK);   // Middle indication
+      Display::drawBitmap(2, 105, epd_bitmap_LOGO_GAS, 36, 36, GxEPD_BLACK);
       
-        
     } while (Display::nextPage());
-    
+   
     Display::setFont(FONT_DYN);
-
-
  }
 
- 
- void Display::dispTemp(int16_t& _temp)
- {
-   if (_temp != m_lastTemp)
-   {
-      m_lastTemp = _temp;
 
-      
-      Display::setPartialWindow(10, 25, 70, 70);
+
+
+ void Display::dispTemp(int16_t* _temp)
+ {
+   if (*_temp != m_lastTemp)
+   {
+      m_lastTemp = *_temp;
+
+      Display::setPartialWindow(10, 50, 50, 30);
       Display::firstPage();
       do
       {
-         Display::setCursor(10, 70);
-         Display::print(_temp);
+         Display::setCursor(10, 75);
+         Display::print(*_temp);
 
       } while (Display::nextPage());
-
    }
-
-
  }
 
-
- void Display::dispGasLevel(uint16_t _nbr)
+ void Display::dispGasLevel(uint8_t _gradToDisplay)
  {
-  
-      //Représentation des "etats" (affiché = NOIR, masqué = BLANC) de chaques graduation de la jauge dans un 
-   static uint16_t etatJauge[6];
-
-   // uint16_t* et1, et2, et3, et4, et5, et6;
-
-      // Assigne à chaque graduation son état, en fonction du nombre de rectangles à affiché passé en paramètre.
-      // Ca marche... Mais c'est TRES lent ! L'arduino met 2 bonnes sec avant d'afficher le résultat.
-   for (size_t i = 0; i < 6; i++)
+   if (_gradToDisplay != m_LastGaugeState)
    {
-      if (i < _nbr)
-      {
-         etatJauge[i] = GxEPD_BLACK;
-      }
-      else
-      {
-         etatJauge[i] = GxEPD_WHITE;
-      }
       
-   }
+         // Steps :
+         // 6/6 = 1
+         // 5/6 = 0.83
+         // 4/6 = 0.66
+         // 3/6 = 0.5
+         // 2/6 = 0.33
+         // 1/6 = 0.16
+      // const float thresholds[5] {0.83f, 0.66f, 0.5f, 0.33f, 0.16f};
+      // static uint8_t selThresh = 5;
 
 
-/*
-         Tentative d'optimisation = 6 tableau statique constant,
-         et un tableau de pointeurs pour "sélectionner" l'affichage.
+      
+         // Optimisation : Etat d'affichage de la jauge représentée avec un tableau de pointeurs
+         // L'état (Blanc ou Noir) est stocké dans deux variables alloué dynamiquement à l'appel à de la fonction.
+         // Oui, l'allocation dynamique c'est juste pour se la péter, en vrai ca sert à rien dans ce cas.
+      
+      
+      static uint16_t colorBlack = GxEPD_BLACK;
+      static uint16_t colorWhite = GxEPD_WHITE;
+      
+      uint16_t* graduationGauge[6];
 
-   static const uint16_t etat3[6] 
-   {GxEPD_BLACK, GxEPD_BLACK, GxEPD_BLACK, GxEPD_WHITE, GxEPD_WHITE, GxEPD_WHITE};
-
-   static const uint16_t* etatJaugeptr[6];
-
-   for (size_t i = 0; i < 6; i++)
-   {
+      for (uint8_t i = 0; i < _gradToDisplay; i++)
       {
-         etatJaugeptr[i] = &etat3[i];
+         graduationGauge[i] = &colorBlack;
       }
-   }
-*/
-   
 
- 
+      for (uint8_t i = _gradToDisplay; i < 6; i++)
+      {
+         graduationGauge[i] = &colorWhite;
+      }
+
+      
+      
+      Display::setPartialWindow(2, 152, 196, 40);
+      Display::firstPage();
+      do
+      {
+         Display::fillScreen(GxEPD_WHITE);
+
+         Display::fillRoundRect(Px1, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[0]);
+         Display::fillRoundRect(Px2, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[1]);
+         Display::fillRoundRect(Px3, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[2]);
+
+         Display::fillRoundRect(Px4, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[3]);
+         Display::fillRoundRect(Px5, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[4]);
+         Display::fillRoundRect(Px6, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[5]);
+         
+            // Du coup c'est cette partie là qui rame...
+
+            /* 
+            Pour dessiner un rectangle, la lib appelle récursivement des fonctions primitives de dessin.
+            Pour dessiner un rectangle : elle appelle récursivement grace à une boucle "for" la fonction "drawFastVLine"
+            Et à chaque appel de fonction, la valeur de couleur est COPIEE !
+
+            Je pense qu'ils ont fait ça pour que la lib soit "Noob Friendly"... La couleur est définie dans une macro,
+            et pour que n'importe laquel de ces fonctions primitives puisse être appelée dans le main, la fonction prend en argumant la VALEUR (sur 16bits).
+            La valeur est donc COPIEE des milliers de fois pour dessiner les jauge...
+
+            Il aurait sans douté été plus pertinant de déclarer les differentes couleurs dans une variable (comme j'ai fais plus haut),
+            et d'y acceder avec un pointeur. ainsi, les appel multiples de fonctions ne ferait que se 
+            passer des pointeurs et on gagnerais beaucoup de temp de traitement.
+
+            Mais peut-être que je me trompe ?
+
+
+                  // J'essairai de ré-écrire cette partie avec un startWrite + DrawPixel dans des for
+            */
+      } while (Display::nextPage());
+   
+   }
+
+ }
+  
+
+void Display::dispReserve()
+{
    Display::setPartialWindow(2, 152, 196, 40);
    Display::firstPage();
    do
    {
-     
       Display::fillScreen(GxEPD_WHITE);
 
-      Display::fillRoundRect(Px1, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[0]);
-      Display::fillRoundRect(Px2, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[1]);
-      Display::fillRoundRect(Px3, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[2]);
+      Display::drawRoundRect(Px1, Py1, G_UNIT_W, 39, G_RAD, GxEPD_BLACK);
 
-      Display::fillRoundRect(Px4, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[3]);
-      Display::fillRoundRect(Px5, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[4]);
-      Display::fillRoundRect(Px6, RECT_POS_Y, RECT_LARG, 39, 5, etatJauge[5]);
-         
- 
+      Display::setCursor(8, Py1);
+      Display::print("R");
 
    } while (Display::nextPage());
-  
+     
 
-
-
-
-
-
- }
-  
+}
  
  
  

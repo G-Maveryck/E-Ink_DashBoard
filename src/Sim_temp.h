@@ -12,7 +12,7 @@ Permet de tester les structures conditionnelles à implémenter dans "Display"
 #define SIM_TEMP_H
 
 #include <Arduino.h>
-#include "TimeGap.h"
+#include "Timer.h"
 
 #define DELAY_INCDEC 5000
 
@@ -21,7 +21,7 @@ Permet de tester les structures conditionnelles à implémenter dans "Display"
 enum tEtat {E_INC, E_DEC};
 static tEtat etat = E_INC;
 
-TimeGap timerVariation(5000);
+ObjTimer timerVariation(5000);
 
 int16_t getTemp()
 {
