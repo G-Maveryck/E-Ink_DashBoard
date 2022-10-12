@@ -13,6 +13,7 @@ Gauge::~Gauge()
 
 void Gauge::integrateNewValue(uint16_t _lvl)
 {
+  /*
       if (m_lvlArray_Counter >= FUEL_ARRAY_SIZE )             // Check if the counter is above the array to avoid overflow.
       {
         m_lvlArray_Counter = 0;                               // Return to 0 when it reach the array limit.
@@ -33,7 +34,10 @@ void Gauge::integrateNewValue(uint16_t _lvl)
     m_lvlAvrg = (*sum / FUEL_ARRAY_SIZE);
 
     delete sum;
+  */
 
+
+  
 }
 
 uint8_t Gauge::gradToDisp()
