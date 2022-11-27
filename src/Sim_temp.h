@@ -1,8 +1,10 @@
 /*
-Simple fonction de test pour simuler un capteur de température et avoir un information à afficher.
+Simple fonction de test pour simuler un capteur de température et avoir 
+une information à afficher.
 
 Renvoie un Float à chaque appel.
-Incrémente toutes les 5sec jusqu'à 120, puis Décrémente pour les 10 sec jusqu'à -40.
+Incrémente toutes les 5sec jusqu'à 120, puis 
+Décrémente pour les 10 sec jusqu'à -40.
 
 Permet de tester les structures conditionnelles à implémenter dans "Display"
 */
@@ -25,7 +27,7 @@ ObjTimer timerVariation(5000);
 
 int16_t getTemp()
 {
-    static int16_t T = 0;                     //Température simulée.
+    static int16_t T(0);                     //Température simulée.
 
     if (timerVariation.gap())
     {

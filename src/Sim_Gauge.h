@@ -10,11 +10,11 @@
 
 uint16_t getFuelLevel()
 {
-    static ObjTimer timerFuel(5000);       // Each 5 sec, lvl is decreased
+    static ObjTimer timerFuel(3000);       // Each 3 sec, lvl is decreased
 
 
     static uint16_t lvl = 1000;
-    uint16_t randLvl = 0;
+    uint16_t randLvl(0);
 
     if (timerFuel.gap())       // Decrease level 
     {

@@ -4,7 +4,7 @@ Definition of the specific methods for the Display Class.
 
 
 #include "Display.h"
-// #include <Fonts/FreeMonoBold12pt7b.h>
+#include <Fonts/FreeMonoBold12pt7b.h>
 #include "Screen_Config.h"
 #include "Bitmaps.h"
 #include "Timer.h"
@@ -78,76 +78,73 @@ Definition of the specific methods for the Display Class.
  {
    if (_gradToDisplay != m_LastGaugeState)
    {
+      m_LastGaugeState = _gradToDisplay;
       
-         // Steps :
-         // 6/6 = 1
-         // 5/6 = 0.83
-         // 4/6 = 0.66
-         // 3/6 = 0.5
-         // 2/6 = 0.33
-         // 1/6 = 0.16
-      // const float thresholds[5] {0.83f, 0.66f, 0.5f, 0.33f, 0.16f};
-      // static uint8_t selThresh = 5;
-
-
-      
-         // Optimisation : Etat d'affichage de la jauge représentée avec un tableau de pointeurs
-         // L'état (Blanc ou Noir) est stocké dans deux variables alloué dynamiquement à l'appel à de la fonction.
-         // Oui, l'allocation dynamique c'est juste pour se la péter, en vrai ca sert à rien dans ce cas.
-      
-      
-      static uint16_t colorBlack = GxEPD_BLACK;
-      static uint16_t colorWhite = GxEPD_WHITE;
-      
-      uint16_t* graduationGauge[6];
-
-      for (uint8_t i = 0; i < _gradToDisplay; i++)
+      if (_gradToDisplay == 1)
       {
-         graduationGauge[i] = &colorBlack;
+       Display::dispReserve();
       }
-
-      for (uint8_t i = _gradToDisplay; i < 6; i++)
-      {
-         graduationGauge[i] = &colorWhite;
-      }
-
       
-      
-      Display::setPartialWindow(2, 152, 196, 40);
-      Display::firstPage();
-      do
+      else
       {
-         Display::fillScreen(GxEPD_WHITE);
-
-         Display::fillRoundRect(Px1, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[0]);
-         Display::fillRoundRect(Px2, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[1]);
-         Display::fillRoundRect(Px3, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[2]);
-
-         Display::fillRoundRect(Px4, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[3]);
-         Display::fillRoundRect(Px5, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[4]);
-         Display::fillRoundRect(Px6, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[5]);
+            // Optimisation : Etat d'affichage de la jauge représentée avec un tableau de pointeurs
+            // L'état (Blanc ou Noir) est stocké dans deux variables alloué dynamiquement à l'appel à de la fonction.
+            // Oui, l'allocation dynamique c'est juste pour se la péter, en vrai ca sert à rien dans ce cas.
          
-            // Du coup c'est cette partie là qui rame...
+         static uint16_t colorBlack = GxEPD_BLACK;
+         static uint16_t colorWhite = GxEPD_WHITE;
+         
+         uint16_t* graduationGauge[6];
 
-            /* 
-            Pour dessiner un rectangle, la lib appelle récursivement des fonctions primitives de dessin.
-            Pour dessiner un rectangle : elle appelle récursivement grace à une boucle "for" la fonction "drawFastVLine"
-            Et à chaque appel de fonction, la valeur de couleur est COPIEE !
+         for (uint8_t i = 0; i < _gradToDisplay; i++)
+         {
+            graduationGauge[i] = &colorBlack;
+         }
 
-            Je pense qu'ils ont fait ça pour que la lib soit "Noob Friendly"... La couleur est définie dans une macro,
-            et pour que n'importe laquel de ces fonctions primitives puisse être appelée dans le main, la fonction prend en argumant la VALEUR (sur 16bits).
-            La valeur est donc COPIEE des milliers de fois pour dessiner les jauge...
+         for (uint8_t i = _gradToDisplay; i < 6; i++)
+         {
+            graduationGauge[i] = &colorWhite;
+         }
 
-            Il aurait sans douté été plus pertinant de déclarer les differentes couleurs dans une variable (comme j'ai fais plus haut),
-            et d'y acceder avec un pointeur. ainsi, les appel multiples de fonctions ne ferait que se 
-            passer des pointeurs et on gagnerais beaucoup de temp de traitement.
+         
+         
+         Display::setPartialWindow(2, 152, 196, 40);
+         Display::firstPage();
+         do
+         {
+            Display::fillScreen(GxEPD_WHITE);
 
-            Mais peut-être que je me trompe ?
+            Display::fillRoundRect(Px1, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[0]);
+            Display::fillRoundRect(Px2, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[1]);
+            Display::fillRoundRect(Px3, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[2]);
+
+            Display::fillRoundRect(Px4, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[3]);
+            Display::fillRoundRect(Px5, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[4]);
+            Display::fillRoundRect(Px6, Py1, G_UNIT_W, 39, G_RAD, *graduationGauge[5]);
+            
+               // Du coup c'est cette partie là qui rame...
+
+               /* 
+               Pour dessiner un rectangle, la lib appelle récursivement des fonctions primitives de dessin.
+               Pour dessiner un rectangle : elle appelle récursivement grace à une boucle "for" la fonction "drawFastVLine"
+               Et à chaque appel de fonction, la valeur de couleur est COPIEE !
+
+               Je pense qu'ils ont fait ça pour que la lib soit "Noob Friendly"... La couleur est définie dans une macro,
+               et pour que n'importe laquel de ces fonctions primitives puisse être appelée dans le main, la fonction prend en argumant la VALEUR (sur 16bits).
+               La valeur est donc COPIEE des milliers de fois pour dessiner les jauge...
+
+               Il aurait sans douté été plus pertinant de déclarer les differentes couleurs dans une variable (comme j'ai fais plus haut),
+               et d'y acceder avec un pointeur. ainsi, les appel multiples de fonctions ne ferait que se 
+               passer des pointeurs et on gagnerais beaucoup de temp de traitement.
+
+               Mais peut-être que je me trompe ?
 
 
-                  // J'essairai de ré-écrire cette partie avec un startWrite + DrawPixel dans des for
-            */
-      } while (Display::nextPage());
+                  J'essairai de ré-écrire cette partie avec un startWrite + DrawPixel dans des for
+               */
+         } while (Display::nextPage());
+
+      }
    
    }
 
@@ -164,7 +161,7 @@ void Display::dispReserve()
 
       Display::drawRoundRect(Px1, Py1, G_UNIT_W, 39, G_RAD, GxEPD_BLACK);
 
-      Display::setCursor(8, Py1);
+      Display::setCursor(5, 190);
       Display::print("R");
 
    } while (Display::nextPage());
@@ -176,8 +173,7 @@ void Display::dispReserve()
  
  
  
- 
- 
+
  
  
  

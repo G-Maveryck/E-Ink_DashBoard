@@ -31,8 +31,6 @@ class Display : protected GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>   
     
     
     
-    
-    
             // Test method
         void dispTime(uint32_t* _time);
 
