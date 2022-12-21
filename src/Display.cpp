@@ -11,8 +11,14 @@ Definition of the specific methods for the Display Class.
 
     //Constructor - Call the constructor of parent class for my specific Display
  Display::Display() : GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>
- (GxEPD2_150_BN(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)), 
- m_lastTemp(0), m_LastGaugeState(0)
+ #if (BOARD == NANO_EVERY)
+   (GxEPD2_150_BN(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)), 
+ #elif (BOARD == UNO_R3)
+   (GxEPD2_150_BN(/*CS=10*/ 10, /*DC=*/ 8, /*RST=*/ 9, /*BUSY=*/ 7)), 
+ #endif
+
+ m_lastTemp(0), 
+ m_LastGaugeState(0)
  {       
  }
 

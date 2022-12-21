@@ -1,6 +1,17 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
+#ifndef BOARD
+    #define BOARD NANO_EVERY
+    // #define BOARD UNO_R3
+#endif
+
+#ifndef BOARD
+    #error You have to specify a board
+#endif
+
+
 // Base class GxEPD2_GFX can be used to pass references or pointers to the display instance as parameter, uses ~1.2k more code.
 // Enable or disable GxEPD2_GFX base class:
 #define ENABLE_GxEPD2_GFX 0
@@ -11,6 +22,8 @@
 
 ////////////////////////////////////
 
+// Define here the size of the array used to average the fuel level.
+// Larger value will uses more RAM.
 #define FUEL_ARRAY_SIZE 60
 
 #endif

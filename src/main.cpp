@@ -55,14 +55,14 @@ void loop()
     
   if (timerSensor.gap())    //  Verify a gap of 1sec, than ask the sensor.
   { 
-    /*
+    
       // Temperature sensor 
     int16_t* tempC = new int16_t(0);
 
     *tempC = getTemp();
     display.dispTemp(tempC);
     
-    delete tempC;   */
+    delete tempC;   
     //////////////////////////////////////////
 
       // Fuel sensor
