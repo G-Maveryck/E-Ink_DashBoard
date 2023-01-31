@@ -2,91 +2,77 @@
 #include "Gauge.h"
 
 
+// Constructor
+Gauge::Gauge() :  m_ArrTotal(0), 
+                  m_lvlArray{1}, 
+                  m_ArrayIndex(0),
+                  m_lvlAvrg(0), 
+                  currentState(6),
 
-Gauge::Gauge() : m_sum(0), m_lvlArray{1}, m_lvlAvrg(0), m_ArrayIndex(1), currentState(6),
-                 thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
-                 stateArray(FILL)   
-{
-}
+                thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
+                stateArray(FILL)
+  {}
 
 
 Gauge::~Gauge()
 {
 }
 
-void Gauge::integrateNewValue(uint16_t _lvl)
+void Gauge::integrateNewValue(const uint16_t& _lvl)
 {
-
   //machine state for filling the array on the first loop, then integrate new slipping values.
 
-  // enum sIntegral {FILL, SLIP};
-  // static sIntegral stateArray = FILL;
-
-  
   switch (stateArray)
   {
+    /*
+    FILL state is used as startup, for filling the array.
+    An average value is calculated based only on the filled collumns of the array.
+    */
     case FILL:
-      m_lvlArray[m_ArrayIndex] = _lvl;
+      m_lvlArray[m_ArrayIndex] = _lvl;        // Filling the array, with the value _lvl passed as argument
 
-      m_sum += m_lvlArray[m_ArrayIndex];
-      m_lvlAvrg = (m_sum/m_ArrayIndex);
+      m_ArrTotal += m_lvlArray[m_ArrayIndex]; // Adding the new value to the array sum (total).
+      m_lvlAvrg = (m_ArrTotal/m_ArrayIndex);  // Dividing the total by the actual numer of filled collumns (index) to compute the Average.
 
-      m_ArrayIndex++;
-      if (m_ArrayIndex >=60)
+      m_ArrayIndex++;                         // Increment Index for the next value.
+
+          // Security to avoid overshooting the array maximum size.
+          // Index go back to 0 if it reach the maximum size.
+      if (m_ArrayIndex >= FUEL_ARRAY_SIZE)
       {
         m_ArrayIndex = 0;
         stateArray = SLIP;
+        // In FILL state, when the maximum value is reached, the array is now full-filled.
+        // Switch to SLIP state.
       }
 
       break;
     
 
     case SLIP:
-      m_sum -= m_lvlArray[m_ArrayIndex];
-      m_lvlArray[m_ArrayIndex] = _lvl;
-      m_sum += m_lvlArray[m_ArrayIndex];
+    /*
+    SLIP state is used when the array is filled. 
+    Substract the old value, add the new, and re-compute the average of the array.
+    */
+      m_ArrTotal -= m_lvlArray[m_ArrayIndex]; // Substract old value to the total
+      m_lvlArray[m_ArrayIndex] = _lvl;        // Add new value to the array
+      m_ArrTotal += m_lvlArray[m_ArrayIndex]; // Add new value to total.
 
-      m_ArrayIndex++;
-      if (m_ArrayIndex >=60)
+      m_ArrayIndex++;             // Increment Index for the next value.
+
+          // Security to avoid overshooting the array maximum size.
+          // Index go back to 0 if it reach the maximum size.
+      if (m_ArrayIndex >= FUEL_ARRAY_SIZE)
       {
         m_ArrayIndex = 0;
       }   
 
-      m_lvlAvrg = (m_sum/FUEL_ARRAY_SIZE);
+          // Compute the average level, based on the total array size.
+      m_lvlAvrg = (m_ArrTotal/FUEL_ARRAY_SIZE); 
 
       break;
       
   }
-
-  
-
- 
-
-
-  /*
-      if (m_lvlArray_Counter >= FUEL_ARRAY_SIZE )             // Check if the counter is above the array to avoid overflow.
-      {
-        m_lvlArray_Counter = 0;                               // Return to 0 when it reach the array limit.
-      }
-      
-      m_lvlArray[m_lvlArray_Counter] = _lvl;                  // Store the current data in the array
-      m_lvlArray_Counter++;                                   // Incrementing counter for the next value
-
-
-
-    uint32_t* sum = new uint32_t(0);
-
-    for (uint8_t i = 0; i < FUEL_ARRAY_SIZE; i++)
-    {
-      *sum += m_lvlArray[i];
-    }
-
-    m_lvlAvrg = (*sum / FUEL_ARRAY_SIZE);
-
-    delete sum;
-  */
-
-
 
 }
 

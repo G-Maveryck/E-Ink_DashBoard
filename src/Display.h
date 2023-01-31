@@ -21,12 +21,13 @@ class Display : protected GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>   
 
         Display();                          // Constructeur
         ~Display();
+        
         void begin(uint32_t _bitrate);      // Initiate the display with the specified bitrate
 
         void setUpHud();                    // Refresh the E-Paper display and draw HUD elements with static parameters. For starup only.
 
         void dispTemp(int16_t* _temp);      // Display the temperature, in a simple way, in his own area. This method handle all the specific instruction for the display.
-        void dispGasLevel(uint8_t _gradToDisplay);     // Ca marche, mais c'est lent !
+        void dispGasLevel(const uint8_t& _gradToDisplay);     // Ca marche, mais c'est lent !
         void dispReserve();
     
     

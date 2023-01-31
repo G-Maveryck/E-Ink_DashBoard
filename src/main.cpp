@@ -19,7 +19,7 @@
 Display display;
 ObjTimer timerSensor(1000);
 
-Gauge fuelGauge;
+Gauge FuelGauge;
 
 void setup() 
 {
@@ -31,18 +31,11 @@ void setup()
   delay(100);
 
   display.setUpHud();
-  delay(1000);
+  // delay(1000);
 
   display.dispGasLevel(6);
-  delay(1000);
-    /*
-  display.dispGasLevel(5);
-  display.dispGasLevel(3);
-  display.dispGasLevel(1);
-  display.dispGasLevel(2);
-  display.dispGasLevel(3);
-  display.dispGasLevel(4);
-  */
+  // delay(1000);
+    
  
 
 }
@@ -53,7 +46,7 @@ void loop()
 {
   
     
-  if (timerSensor.gap())    //  Verify a gap of 1sec, than ask the sensor.
+  if (timerSensor.gap())    //  Verify a gap of 1sec, then ask the sensor.
   { 
     
       // Temperature sensor 
@@ -74,13 +67,13 @@ void loop()
       Serial.print("readLvl =      ");
       Serial.println(readLvl);
 
-    fuelGauge.integrateNewValue(readLvl);
+    FuelGauge.integrateNewValue(readLvl);
     
-    tmp_lvlAvrg = fuelGauge.getLevelAverage();
+    tmp_lvlAvrg = FuelGauge.getLevelAverage();
       Serial.print("Average Level = ");
       Serial.println(tmp_lvlAvrg);
 
-    cState = fuelGauge.curentState();
+    cState = FuelGauge.curentState();
       Serial.print("cState = ");
       Serial.println(cState);
 
