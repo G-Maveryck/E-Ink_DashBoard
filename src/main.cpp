@@ -1,20 +1,22 @@
 #include <Arduino.h>
 
-// Include libraries:
-// Include the specific class to handle the display as a Dashboard
-#include "Display.h"
+#include "Display.hpp"
 #include "Timer.h"
-#include "Gauge.h"
+#include "Gauge.hpp"
 
-#include "Sim_temp.h"
-#include "Sim_Gauge.h"
+#include "Sim_temp.hpp"
+#include "Sim_Gauge.hpp"
 
-// #include <DallasTemperature.h>
-// #include <OneWire.h>
+#include "DebugMacro.hpp"
+
+/*
+#include <DallasTemperature.h>
+#include <OneWire.h>
 
 
-// OneWire onewire (4);
-// DallasTemperature sensors (&onewire);
+OneWire onewire (4);
+DallasTemperature sensors (&onewire);
+*/
 
 Display display;
 ObjTimer timerSensor(1000);
@@ -50,12 +52,11 @@ void loop()
   { 
     
       // Temperature sensor 
-    int16_t* tempC = new int16_t(0);
+    int16_t tempC(0);
+    tempC = getTemp();
 
-    *tempC = getTemp();
     display.dispTemp(tempC);
     
-    delete tempC;   
     //////////////////////////////////////////
 
       // Fuel sensor
@@ -64,31 +65,23 @@ void loop()
     uint8_t cState(0);
 
     readLvl = getFuelLevel();
-      Serial.print("readLvl =      ");
-      Serial.println(readLvl);
+      PRINT("readLvl =      ");
+      PRINTLN(readLvl);
 
     FuelGauge.integrateNewValue(readLvl);
     
     tmp_lvlAvrg = FuelGauge.getLevelAverage();
-      Serial.print("Average Level = ");
-      Serial.println(tmp_lvlAvrg);
+      PRINT("Average Level = ");
+      PRINTLN(tmp_lvlAvrg);
 
     cState = FuelGauge.curentState();
-      Serial.print("cState = ");
-      Serial.println(cState);
+      PRINT("cState = ");
+      PRINTLN(cState);
 
     
     display.dispGasLevel(cState);
-    
-
-    
-    
-
 
   }
-
-
-        
 
 }
  

@@ -6,11 +6,16 @@
 #include "Timer.h"
 
 
-ObjTimer::ObjTimer() : m_time(0), m_nextTime(0), m_gap(1000)                  // Defaut constructor : Standard gap of sec
+ObjTimer::ObjTimer() : m_time(0), 
+    m_nextTime(0), 
+    m_gap(1000)        // Defaut constructor : Standard gap of sec
 {
 }
 
-ObjTimer::ObjTimer(uint16_t gap) : m_time(0), m_nextTime(0), m_gap(gap)       // Constructor with user gap.
+ObjTimer::ObjTimer(uint16_t gap) : 
+    m_time(0), 
+    m_nextTime(0), 
+    m_gap(gap)       // Constructor with user gap.
 {
 }
 

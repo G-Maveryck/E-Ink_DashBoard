@@ -12,6 +12,14 @@
 #endif
 
 
+    // Setiing the debug or release configuration.
+#ifndef DEBUG_MODE
+#define DEBUG_MODE DEBUG
+// #define DEBUG_MODE RELEASE
+#endif
+
+
+
 // Base class GxEPD2_GFX can be used to pass references or pointers to the display instance as parameter, uses ~1.2k more code.
 // Enable or disable GxEPD2_GFX base class:
 #define ENABLE_GxEPD2_GFX 0
@@ -22,7 +30,7 @@
 
 ////////////////////////////////////
 
-// Define here the size of the array used to average the fuel level.
+// Define here the size of the array used to integrate the reading of fuel level.
 // Larger value will uses more RAM.
 #define FUEL_ARRAY_SIZE 60
 

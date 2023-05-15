@@ -1,12 +1,12 @@
 /*
-Simple fonction de test pour simuler un capteur de température et avoir 
-une information à afficher.
+    Simple fonction de test pour simuler un capteur de température et avoir 
+    une information à afficher.
 
-Renvoie un Float à chaque appel.
-Incrémente toutes les 5sec jusqu'à 120, puis 
-Décrémente pour les 10 sec jusqu'à -40.
+    Renvoie un Float à chaque appel.
+    Incrémente toutes les 5sec jusqu'à 120, puis 
+    Décrémente pour les 10 sec jusqu'à -40.
 
-Permet de tester les structures conditionnelles à implémenter dans "Display"
+    Permet de tester les structures conditionnelles à implémenter dans "Display"
 */
 
 
@@ -35,7 +35,6 @@ int16_t getTemp()
         switch (etat)
         {
         case E_INC :
-
             T++;
 
             if (T >= 120) 
@@ -46,7 +45,6 @@ int16_t getTemp()
             break;
             
         case E_DEC :
-
             T--;
 
             if (T <= -40)

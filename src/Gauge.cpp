@@ -1,6 +1,6 @@
 
-#include "Gauge.h"
-
+#include "Gauge.hpp"
+#include "DebugMacro.hpp"
 
 // Constructor
 Gauge::Gauge() :  m_ArrTotal(0), 
@@ -9,8 +9,8 @@ Gauge::Gauge() :  m_ArrTotal(0),
                   m_lvlAvrg(0), 
                   currentState(6),
 
-                thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
-                stateArray(FILL)
+                 // thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
+                  stateArray(FILL)
   {}
 
 
@@ -25,7 +25,7 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
   switch (stateArray)
   {
     /*
-    FILL state is used as startup, for filling the array.
+    FILL state is used at startup, for filling the array.
     An average value is calculated based only on the filled collumns of the array.
     */
     case FILL:
@@ -36,8 +36,8 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
 
       m_ArrayIndex++;                         // Increment Index for the next value.
 
-          // Security to avoid overshooting the array maximum size.
-          // Index go back to 0 if it reach the maximum size.
+          // Security to avoid overshooting the array maximum index.
+          // Index go back to 0 if it reach the maximum.
       if (m_ArrayIndex >= FUEL_ARRAY_SIZE)
       {
         m_ArrayIndex = 0;
@@ -88,14 +88,12 @@ uint8_t Gauge::curentState()
          // const float thresholds[5] {0.83f, 0.66f, 0.5f, 0.33f, 0.16f};
          // static uint8_t selThresh = 5;
 
-
-
-  float ratio = ( float(m_lvlAvrg) / 1200.00f );
-    Serial.print("Ratio =    ");
-    Serial.println(ratio);
+  float ratio = ( (static_cast<float>(m_lvlAvrg) ) / 1200.00f ) ;
+    PRINT("Ratio =    ");
+    PRINTLN(ratio);
     // BOILERPLATE AF
 
-    // Y'a surement moyen de faire ça avec une machine à état.. J'me creuse la tête..
+    
   if (ratio<=1 && ratio > thresholds[0] )
   {
     currentState = 6 ;
@@ -126,13 +124,12 @@ uint8_t Gauge::curentState()
     currentState = 1;
   }
   
+  PRINT("current state = ");
+  PRINTLN(currentState);
+
   return currentState;
 
-
-
 }
-
-
 
 
 uint16_t Gauge::getLevelAverage()
