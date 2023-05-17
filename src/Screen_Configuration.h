@@ -3,12 +3,10 @@
     Define the used fonts, etc..
 */
 
+#ifndef SCREEN_CONFIGURATION_H
+#define SCREEN_CONFIGURATION_H
 
-#ifndef SCREEN_CONFIG_H
-#define SCREEN_CONFIG_H
 
-//#include <Fonts/FreeSans9pt7b.h>
-// #include <Fonts/FreeSansBold12pt7b.h>
 #include <Fonts/FreeSansBold18pt7b.h>
 
 //#define FONT_UI &FreeSans9pt7b
@@ -16,6 +14,11 @@
 
 /////////////////////////////////////
 
+    // Macro for handling the partial window coordinates in a simpler way.
+#define FUEL_GAUGE_WINDOW 2, 152, 196, 40
+#define AIR_TEMP_WINDOW 10, 50, 50, 30
+
+/////////////////////////////////////
 
 #define G_UNIT_TOT 6
 
@@ -25,11 +28,6 @@
 
 #define Py1 154
 #define Px1 6
-#define Px2 (Px1 + G_UNIT_W + G_UNIT_INT)
-#define Px3 (Px2 + G_UNIT_W + G_UNIT_INT)
-#define Px4 (Px3 + G_UNIT_W + G_UNIT_INT)
-#define Px5 (Px4 + G_UNIT_W + G_UNIT_INT)
-#define Px6 (Px5 + G_UNIT_W + G_UNIT_INT)
 
 
 #endif

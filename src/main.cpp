@@ -7,6 +7,7 @@
 #include "Sim_temp.hpp"
 #include "Sim_Gauge.hpp"
 
+#include "Screen_Configuration.h"
 #include "DebugMacro.hpp"
 
 /*
@@ -47,15 +48,13 @@ void setup()
 void loop() 
 {
   
-    
   if (timerSensor.gap())    //  Verify a gap of 1sec, then ask the sensor.
   { 
-    
       // Temperature sensor 
     int16_t tempC(0);
     tempC = getTemp();
 
-    display.dispTemp(tempC);
+    display.dispAirTemp(tempC);
     
     //////////////////////////////////////////
 
@@ -78,7 +77,6 @@ void loop()
       PRINT("cState = ");
       PRINTLN(cState);
 
-    
     display.dispGasLevel(cState);
 
   }

@@ -1,10 +1,11 @@
+
 /*
-    Class for the handling of the gauge data.
+    Class for the handling of the gauge data
     Determine the fuel level, average it on 1 min, and manage the switch threshold.
 */
 
-#ifndef GAUGE_H
-#define GAUGE_H
+#ifndef GAUGE_HPP
+#define GAUGE_HPP
 
 #include "Configuration.hpp"
 #include <Arduino.h>
@@ -20,11 +21,9 @@ public:
 
     uint16_t getLevelAverage();
 
-
-
 private:
     uint32_t    m_ArrTotal;
-    
+
     uint16_t    m_lvlArray[FUEL_ARRAY_SIZE], 
                 m_lvlAvrg;
 
@@ -38,9 +37,6 @@ private:
 
 
 };
-
-
-
 
 
 #endif
