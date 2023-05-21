@@ -7,8 +7,10 @@
 #ifndef GAUGE_HPP
 #define GAUGE_HPP
 
-#include "Configuration.hpp"
 #include <Arduino.h>
+
+#include "ConversionTable.hpp"
+#include "Configuration.hpp"
 
 
 class Gauge
@@ -21,6 +23,8 @@ public:
     uint8_t curentState();                  // Return the current number of rectangle to print, for m_lvlAvrg.
 
     uint16_t getLevelAverage();
+    uint16_t getLevelLiters();
+
 
 private:
     uint32_t m_ArrTotal;
@@ -34,6 +38,7 @@ private:
     enum sIntegral {FILL, SLIP};
     sIntegral stateArray;
 
+    ConversionTable Table;
 
 };
 

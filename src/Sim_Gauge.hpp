@@ -2,7 +2,7 @@
 #define SIM_GAUGE_H
 
 #include <Arduino.h>
-#include "Timer.h"
+#include "GTimer.hpp"
 
 #include <time.h>
 
@@ -10,13 +10,13 @@
 
 uint16_t getFuelLevel()
 {
-    static ObjTimer timerFuel(3000);       // Each 3 sec, lvl is decreased
+    static GTimer timerFuel(3000);       // Each 3 sec, lvl is decreased
 
 
     static uint16_t lvl = 1000;
     uint16_t randLvl(0);
 
-    if (timerFuel.gap())       // Decrease level 
+    if (timerFuel.timeOut())       // Decrease level 
     {
        lvl-- ;
        

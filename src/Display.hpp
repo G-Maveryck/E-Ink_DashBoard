@@ -5,16 +5,15 @@
 #ifndef DISPLAY_HPP
 #define DISPLAY_HPP
 
-
+#include <Arduino.h>
 #include <GxEPD2_BW.h>
 #include "epd/GxEPD2_150_BN.h"
 
 #include "Screen_Configuration.h"
 #include "Configuration.hpp"
-#include "Coordinate.h"
 
 
-class Display : public GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>    //Inheritance of the BW Template Class with specific parameters.
+class Display : protected GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>    //Inheritance of the BW Template Class with specific parameters.
 {
 public:
     Display();                          // Constructeur
@@ -25,13 +24,16 @@ public:
 
     void dispAirTemp(const int16_t& _temp);      // Display the temperature, in a simple way, in his own area. This method handle all the specific instruction for the display.
     void dispGasLevel(const uint8_t& _gradToDisplay);     // Ca marche, mais c'est lent !
-
+    
 protected:
     void dispReserve();
     void errorPrompt(byte errorCode);
+    
+
 private:
     int16_t m_lastTemp;
     uint8_t m_LastGaugeState;
+
 };
 
 #endif

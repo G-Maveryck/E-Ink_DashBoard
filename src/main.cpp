@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "Display.hpp"
-#include "Timer.h"
+#include "GTimer.hpp"
 #include "Gauge.hpp"
 
 #include "Sim_temp.hpp"
@@ -20,7 +20,7 @@ DallasTemperature sensors (&onewire);
 */
 
 Display display;
-ObjTimer timerSensor(1000);
+GTimer timerSensor(1000);
 
 Gauge FuelGauge;
 
@@ -36,7 +36,7 @@ void setup()
   display.setUpHud();
   // delay(1000);
 
-  display.dispGasLevel(6);
+  display.dispGasLevel(1);
   // delay(1000);
     
  
@@ -48,7 +48,7 @@ void setup()
 void loop() 
 {
   
-  if (timerSensor.gap())    //  Verify a gap of 1sec, then ask the sensor.
+  if (timerSensor.timeOut())    //  Verify a gap of 1sec, then ask the sensor.
   { 
       // Temperature sensor 
     int16_t tempC(0);

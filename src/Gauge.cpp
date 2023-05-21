@@ -64,10 +64,10 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
       m_lvlArray[m_ArrayIndex] = _lvl;        // Add new value to the array
       m_ArrTotal += m_lvlArray[m_ArrayIndex]; // Add new value to total.
 
-      m_ArrayIndex++;             // Increment Index for the next value.
+      m_ArrayIndex++; 
 
-          // Security to avoid overshooting the array maximum size.
-          // Index go back to 0 if it reach the maximum size.
+        // Security to avoid overshooting the array maximum size.
+        // Index go back to 0 if it reach the maximum size.
       if (m_ArrayIndex >= FUEL_ARRAY_SIZE)
       {
         m_ArrayIndex = 0;
@@ -128,58 +128,12 @@ uint8_t Gauge::curentState()
     So we return the actual number of iteration, so, "how many 1/6 fit in the percentage"
     */ 
   
-
   LOG("incrementStep = ");
   LOGLN(incrementStep);
   LOGLN("*** Return currentState() ***");
   LOGLN(" ");
   return incrementStep;
-  
 
-
-
-  /*
-      OLD METHOD
-  float ratio = ( (static_cast<float>(m_lvlAvrg) ) / 1200.00f ) ;
-    LOG("Ratio =    ");
-    LOGLN(ratio);
-
-    // BOILERPLATE AF
-  if (ratio<=1 && ratio > thresholds[0] )
-  {
-    currentState = 6 ;
-  }
-
-  else if (ratio <= thresholds[0] && ratio > thresholds[1])
-  {
-    currentState = 5;
-  }
-
-  else if (ratio <= thresholds[1] && ratio > thresholds[2])
-  {
-    currentState = 4;
-  }
-
-  else if (ratio <= thresholds[2] && ratio > thresholds[3])
-  {
-    currentState = 3;
-  }
-
-  else if (ratio <= thresholds[3] && ratio > thresholds[4])
-  {
-    currentState = 2;
-  }
-
-  else if (ratio < thresholds[4])
-  {
-    currentState = 1;
-  }
-  
-  LOG("current state = ");
-  LOGLN(currentState);
-
-  return currentState;
-  */
 }
 
 

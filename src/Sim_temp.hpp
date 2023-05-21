@@ -14,7 +14,7 @@
 #define SIM_TEMP_H
 
 #include <Arduino.h>
-#include "Timer.h"
+#include "GTimer.hpp"
 
 #define DELAY_INCDEC 5000
 
@@ -23,13 +23,13 @@
 enum tEtat {E_INC, E_DEC};
 static tEtat etat = E_INC;
 
-ObjTimer timerVariation(5000);
+GTimer timerVariation(5000);
 
 int16_t getTemp()
 {
     static int16_t T(0);                     //Température simulée.
 
-    if (timerVariation.gap())
+    if (timerVariation.timeOut())
     {
 
         switch (etat)

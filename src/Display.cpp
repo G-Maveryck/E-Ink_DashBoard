@@ -4,10 +4,10 @@ Definition of the specific methods for the Display Class.
 
 
 #include "Display.hpp"
-#include "Timer.h"
 #include "Bitmaps.h"
-
 #include "Screen_Configuration.h"
+
+#include "DebugMacro.hpp"
 
 
 Display::Display() : GxEPD2_BW<GxEPD2_150_BN, MAX_HEIGHT(GxEPD2_150_BN)>
@@ -34,8 +34,8 @@ void Display::begin(uint32_t _bitrate)
    init(_bitrate);
 }
 
- void Display::setUpHud()
- {
+void Display::setUpHud()
+{
 
    setFullWindow();
    setRotation(1);                  // Set orientation. Goes from 0, 1, 2 or 3
@@ -50,22 +50,21 @@ void Display::begin(uint32_t _bitrate)
       drawFastHLine(0, 100, 200, GxEPD_BLACK);
       drawFastVLine(100, 100, -100, GxEPD_BLACK);
        
-         //Temp indication     
+         // Air Temp logo 
       drawBitmap(2, 2, epd_bitmap_Logo_Temp_35px, 35, 35, GxEPD_BLACK);
 
-       // Fuel gauge Background
+       // Fuel gauge Background and logo
       drawRect(1, 150, 198, 48, GxEPD_BLACK);      // Gauge frame
       drawFastVLine(100, 150, -10, GxEPD_BLACK);   // Middle indication
-      drawBitmap(2, 105, epd_bitmap_LOGO_GAS, 36, 36, GxEPD_BLACK);
-      
+      drawBitmap(2, 105, epd_bitmap_LOGO_GAS, 36, 36, GxEPD_BLACK);  // Fuel logo
     } while (Display::nextPage());
    
    setFont(FONT_DYN);
- }
+}
 
    // Specific methods for dashboard display.
- void Display::dispAirTemp(const int16_t& _temp)
- {
+void Display::dispAirTemp(const int16_t& _temp)
+{
    if (_temp != m_lastTemp)
    {
       m_lastTemp = _temp;
@@ -91,8 +90,10 @@ void Display::dispGasLevel(const uint8_t& _gradToDisplay)
       {
          dispReserve();
       }
+
       else if (0 <= _gradToDisplay && _gradToDisplay <= 6)
       {
+            // Drawing function
          setPartialWindow(FUEL_GAUGE_WINDOW);
          firstPage();
          do
@@ -118,9 +119,6 @@ void Display::dispGasLevel(const uint8_t& _gradToDisplay)
       {
          errorPrompt(_gradToDisplay);
       }
-   
-      
-      
    }
 
 }
@@ -134,13 +132,15 @@ void Display::dispReserve()
       fillScreen(GxEPD_WHITE);
       drawRoundRect(Px1, Py1, G_UNIT_W, 38, G_RAD, GxEPD_BLACK);
 
-      setCursor(6, 184);
+      setCursor(9, 180);
       print("R");
 
    } while (nextPage());
      
 }
 
+
+   // Error code handling
 void Display::errorPrompt(byte errorCode)
 {
    switch (errorCode)
@@ -164,8 +164,8 @@ void Display::errorPrompt(byte errorCode)
          fillScreen(GxEPD_WHITE);
          setCursor(5, 186);
          print("ERRUNK");  // Error Unknow
+         LOGLN("Invalid graduation number");
       } while (nextPage());
-      
       break;
    }
 
