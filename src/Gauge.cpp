@@ -1,20 +1,22 @@
 /*
-
+  Implementation of the Gauge class
 */
 
 #include "Gauge.hpp"
 #include "DebugMacro.hpp"
 
 // Constructor
-Gauge::Gauge() :  m_ArrTotal(0), 
-                  m_lvlArray{1}, 
-                  m_ArrayIndex(0),
-                  m_lvlAvrg(0), 
-                  currentState(6),
-
-                 // thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
-                  stateArray(FILL)
-  {}
+Gauge::Gauge() : 
+    m_ArrTotal(0), 
+    m_lvlArray{1},
+    m_ArrayIndex(0),
+    m_lvlAvrg(1), 
+    currentState(6),
+    // thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
+    stateArray(FILL)
+{
+  
+}
 
 
 Gauge::~Gauge()
@@ -31,12 +33,15 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
     FILL state is used at startup, for filling the array.
     An average value is calculated based only on the filled collumns of the array.
     */
+   
     case FILL:
-      m_lvlArray[m_ArrayIndex] = _lvl;        // Filling the array, with the value _lvl passed as argument
+        // Filling the array, with the value _lvl passed as argument
+        // Adding the new value to the array sum (total).
+      m_lvlArray[m_ArrayIndex] = _lvl;        
+      m_ArrTotal += m_lvlArray[m_ArrayIndex]; 
 
-      m_ArrTotal += m_lvlArray[m_ArrayIndex]; // Adding the new value to the array sum (total).
-      m_lvlAvrg = (m_ArrTotal/m_ArrayIndex);  // Dividing the total by the actual numer of filled collumns (index) to compute the Average.
-
+      m_lvlAvrg = (m_ArrTotal/(m_ArrayIndex +1));  // Dividing the total by the actual numer of filled collumns (index) to compute the Average.
+      
       m_ArrayIndex++;                         // Increment Index for the next value.
 
           // Security to avoid overshooting the array maximum index.
@@ -48,10 +53,8 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
         // In FILL state, when the maximum value is reached, the array is now full-filled.
         // Switch to SLIP state.
       }
-
       break;
     
-
     case SLIP:
     /*
     SLIP state is used when the array is filled. 
@@ -90,13 +93,58 @@ uint8_t Gauge::curentState()
             // 1/6 = 0.16
          // const float thresholds[5] {0.83f, 0.66f, 0.5f, 0.33f, 0.16f};
          // static uint8_t selThresh = 5;
+  LOGLN("*** Enter currentState() ***");
 
-  float ratio = ( (static_cast<float>(m_lvlAvrg) ) / 1200.00f ) ;
-    PRINT("Ratio =    ");
-    PRINTLN(ratio);
-    // BOILERPLATE AF
+  #define PERCENTAGE_STEP 17
 
+  byte testPercent(0);
+  byte incrementStep(0);
+
+  float ratio = static_cast<float>(m_lvlAvrg)/1200.0f;
+  LOG("ratio = ");
+  LOGLN(ratio);
+  
+  uint16_t percentage = static_cast<uint16_t>( (ratio*100.0f) );
+  LOG("Percentage = ");
+  LOGLN(percentage);
+
+  while (testPercent <= percentage)
+  {
+    testPercent += PERCENTAGE_STEP;
+    incrementStep++;
+
+    if (incrementStep > 6)
+    {
+      incrementStep = 6;
+      break;
+    }
     
+  }
+    /*
+    Each increment correspond to an interval of 17% (or 1/6).
+    When the while's condition is not match, that means our percentage is now 
+    lower than the testPercantage. So, his value is bound between the last and
+    the actual test.
+    So we return the actual number of iteration, so, "how many 1/6 fit in the percentage"
+    */ 
+  
+
+  LOG("incrementStep = ");
+  LOGLN(incrementStep);
+  LOGLN("*** Return currentState() ***");
+  LOGLN(" ");
+  return incrementStep;
+  
+
+
+
+  /*
+      OLD METHOD
+  float ratio = ( (static_cast<float>(m_lvlAvrg) ) / 1200.00f ) ;
+    LOG("Ratio =    ");
+    LOGLN(ratio);
+
+    // BOILERPLATE AF
   if (ratio<=1 && ratio > thresholds[0] )
   {
     currentState = 6 ;
@@ -127,11 +175,11 @@ uint8_t Gauge::curentState()
     currentState = 1;
   }
   
-  PRINT("current state = ");
-  PRINTLN(currentState);
+  LOG("current state = ");
+  LOGLN(currentState);
 
   return currentState;
-
+  */
 }
 
 

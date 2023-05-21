@@ -28,7 +28,7 @@ public:
 
 protected:
     void dispReserve();
-
+    void errorPrompt(byte errorCode);
 private:
     int16_t m_lastTemp;
     uint8_t m_LastGaugeState;

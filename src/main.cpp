@@ -64,20 +64,20 @@ void loop()
     uint8_t cState(0);
 
     readLvl = getFuelLevel();
-      PRINT("readLvl =      ");
-      PRINTLN(readLvl);
+    LOG("readLvl =      ");
+    LOGLN(readLvl);
 
     FuelGauge.integrateNewValue(readLvl);
     
     tmp_lvlAvrg = FuelGauge.getLevelAverage();
-      PRINT("Average Level = ");
-      PRINTLN(tmp_lvlAvrg);
+    LOG("Average Level = ");
+    LOGLN(tmp_lvlAvrg);
 
     cState = FuelGauge.curentState();
-      PRINT("cState = ");
-      PRINTLN(cState);
 
     display.dispGasLevel(cState);
+
+    LOGLN(" ");
 
   }
 

@@ -10,6 +10,7 @@
 #include "Configuration.hpp"
 #include <Arduino.h>
 
+
 class Gauge
 {
 public:
@@ -22,15 +23,13 @@ public:
     uint16_t getLevelAverage();
 
 private:
-    uint32_t    m_ArrTotal;
-
-    uint16_t    m_lvlArray[FUEL_ARRAY_SIZE], 
-                m_lvlAvrg;
-
-    uint8_t     m_ArrayIndex, 
-                currentState;
-        
-    const float thresholds[5]{0.83f, 0.66f, 0.5f, 0.33f, 0.16f};
+    uint32_t m_ArrTotal;
+    uint16_t m_lvlArray[FUEL_ARRAY_SIZE];
+    uint16_t m_lvlAvrg;
+    byte m_ArrayIndex;
+    byte currentState;
+    
+    // const float thresholds[5] /*{0.83f, 0.66f, 0.5f, 0.33f, 0.16f}*/;
 
     enum sIntegral {FILL, SLIP};
     sIntegral stateArray;

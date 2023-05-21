@@ -18,14 +18,14 @@
 #error Missing DEBUG_MODE configuration : please see the "Configuration.hpp" file
 
 #else
-    #if (DEBUG_MODE == DEBUG)
-    #define PRINT(x) Serial.print(x)
-    #define PRINTLN(x) Serial.println(x)
+    #if (DEBUG_MODE == 1)
+    #define LOG(x) Serial.print(x)
+    #define LOGLN(x) Serial.println(x)
     #endif
 
-    #if (DEBUG_MODE == RELEASE)
-    #define PRINT(x) 
-    #define PRINTLN(x)
+    #if (DEBUG_MODE == 0)
+    #define LOG(x) 
+    #define LOGLN(x)
     #endif
 
 #endif

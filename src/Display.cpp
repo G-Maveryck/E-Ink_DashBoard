@@ -89,10 +89,9 @@ void Display::dispGasLevel(const uint8_t& _gradToDisplay)
       
       if (_gradToDisplay == 1)
       {
-       dispReserve();
+         dispReserve();
       }
-
-      else
+      else if (0 <= _gradToDisplay && _gradToDisplay <= 6)
       {
          setPartialWindow(FUEL_GAUGE_WINDOW);
          firstPage();
@@ -113,6 +112,15 @@ void Display::dispGasLevel(const uint8_t& _gradToDisplay)
             }
          } while (nextPage());  
       }
+
+         // Error Handling
+      else
+      {
+         errorPrompt(_gradToDisplay);
+      }
+   
+      
+      
    }
 
 }
@@ -124,11 +132,41 @@ void Display::dispReserve()
    do
    {
       fillScreen(GxEPD_WHITE);
-      drawRoundRect(Px1, Py1, G_UNIT_W, 39, G_RAD, GxEPD_BLACK);
+      drawRoundRect(Px1, Py1, G_UNIT_W, 38, G_RAD, GxEPD_BLACK);
 
-      setCursor(5, 186);
+      setCursor(6, 184);
       print("R");
 
    } while (nextPage());
      
+}
+
+void Display::errorPrompt(byte errorCode)
+{
+   switch (errorCode)
+   {
+   case 100:   // Error on fuel Gauge.
+      setPartialWindow(FUEL_GAUGE_WINDOW);
+      firstPage();
+      do
+      {
+         fillScreen(GxEPD_WHITE);
+         setCursor(5, 186);
+         print("ERR 100");
+      } while (nextPage());
+      break;
+   
+   default: //default error
+      setPartialWindow(FUEL_GAUGE_WINDOW);
+      firstPage();
+      do
+      {
+         fillScreen(GxEPD_WHITE);
+         setCursor(5, 186);
+         print("ERRUNK");  // Error Unknow
+      } while (nextPage());
+      
+      break;
+   }
+
 }

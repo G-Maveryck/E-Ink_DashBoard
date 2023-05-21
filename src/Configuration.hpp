@@ -12,10 +12,12 @@
 #endif
 
 
-    // Setiing the debug or release configuration.
+    // Setting the debug or release configuration.
+    // 1 = Debug mode
+    // 0 = Release mode
 #ifndef DEBUG_MODE
-#define DEBUG_MODE DEBUG
-// #define DEBUG_MODE RELEASE
+#define DEBUG_MODE 1
+// #define DEBUG_MODE 0
 #endif
 
 
