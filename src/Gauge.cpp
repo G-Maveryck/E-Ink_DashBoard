@@ -12,27 +12,27 @@ Gauge::Gauge() :
     m_ArrayIndex(0),
     m_lvlAvrg(1), 
     currentState(6),
-    // thresholds{0.83f, 0.66f, 0.5f, 0.33f, 0.16f},
-    stateArray(FILL)
+    stateArray(FILL),
+    stateGauge(READ)
 {
-  
+  m_GaugeEEprom = new EEpromManager();
+  Table = new ConversionTable(m_GaugeEEprom);
 }
-
 
 Gauge::~Gauge()
 {
+  delete Table;
+  delete m_GaugeEEprom;
 }
 
 void Gauge::integrateNewValue(const uint16_t& _lvl)
 {
-  //machine state for filling the array on the first loop, then integrate new slipping values.
-
   switch (stateArray)
   {
-    /*
-    FILL state is used at startup, for filling the array.
-    An average value is calculated based only on the filled collumns of the array.
-    */
+      /*
+      FILL state is used at startup, for filling the array.
+      An average value is calculated based only on the filled collumns of the array.
+      */
    
     case FILL:
         // Filling the array, with the value _lvl passed as argument
@@ -56,10 +56,10 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
       break;
     
     case SLIP:
-    /*
-    SLIP state is used when the array is filled. 
-    Substract the old value, add the new, and re-compute the average of the array.
-    */
+      /*
+      SLIP state is used when the array is filled. 
+      Substract the old value, add the new, and re-compute the average of the array.
+      */
       m_ArrTotal -= m_lvlArray[m_ArrayIndex]; // Substract old value to the total
       m_lvlArray[m_ArrayIndex] = _lvl;        // Add new value to the array
       m_ArrTotal += m_lvlArray[m_ArrayIndex]; // Add new value to total.
@@ -75,7 +75,6 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
 
           // Compute the average level, based on the total array size.
       m_lvlAvrg = (m_ArrTotal/FUEL_ARRAY_SIZE); 
-
       break;
       
   }
@@ -84,15 +83,10 @@ void Gauge::integrateNewValue(const uint16_t& _lvl)
 
 uint8_t Gauge::curentState()
 {
-      // Steps :
-            // 6/6 = 1
-            // 5/6 = 0.83
-            // 4/6 = 0.66
-            // 3/6 = 0.5
-            // 2/6 = 0.33
-            // 1/6 = 0.16
-         // const float thresholds[5] {0.83f, 0.66f, 0.5f, 0.33f, 0.16f};
-         // static uint8_t selThresh = 5;
+  /*
+    "Current State" return the number of "1/6" that fit into the average level.
+    It is the number of graduation for the display. Max = 6, min = 0 (or Reserve).
+  */
   LOGLN("*** Enter currentState() ***");
 
   #define PERCENTAGE_STEP 17

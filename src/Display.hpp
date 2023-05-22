@@ -24,10 +24,11 @@ public:
 
     void dispAirTemp(const int16_t& _temp);      // Display the temperature, in a simple way, in his own area. This method handle all the specific instruction for the display.
     void dispGasLevel(const uint8_t& _gradToDisplay);     // Ca marche, mais c'est lent !
-    
+    void dispCalibrationIdle();
+
 protected:
-    void dispReserve();
-    void errorPrompt(byte errorCode);
+    inline void dispReserve();
+    inline void errorPrompt(byte errorCode);
     
 
 private:

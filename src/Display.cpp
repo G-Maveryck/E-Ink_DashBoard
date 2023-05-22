@@ -123,6 +123,22 @@ void Display::dispGasLevel(const uint8_t& _gradToDisplay)
 
 }
 
+void Display::dispCalibrationIdle()
+{
+   setPartialWindow(FUEL_GAUGE_WINDOW);
+   firstPage();
+   do
+   {
+      fillScreen(GxEPD_WHITE);
+      // drawRect(5, 155, 190, 34, GxEPD_BLACK);
+      
+      setCursor(9, 180);
+      print("CALIB...");
+
+   } while (nextPage());  
+
+}
+
 void Display::dispReserve()
 {
    setPartialWindow(FUEL_GAUGE_WINDOW);

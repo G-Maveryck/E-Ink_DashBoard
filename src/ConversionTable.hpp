@@ -13,25 +13,30 @@
 
 #include <Arduino.h>
 
+#include "EEpromManager.hpp"
 #include "Configuration.hpp"
 
 
 class ConversionTable
 {
+private :
+    
 public:
-    ConversionTable();
+    ConversionTable(EEpromManager* Accesser);
     ~ConversionTable();
 
     float getLiters(const uint16_t &readValue);
-    
-protected:
-    float linearInterpolate(const byte &a, const byte &x);
 
+protected:
+    inline float linearInterpolate(const byte &a, const byte &x);
 
 private:
     uint16_t m_table[CONVERSION_ARRAY_SIZE];
-    
+
+    EEpromManager* m_TableEEprom;
 };
+
+
 
 
 
