@@ -8,23 +8,25 @@
 
 #include <EEPROM.h>
 
-ConversionTable::ConversionTable(EEpromManager* _EEpAcc) :
-    m_TableEEprom(_EEpAcc)
+ConversionTable::ConversionTable(EEpromManager* _eemPtr) :
+        m_CalibState(READING),
+        Memory(_eemPtr)
 {
         // Iterate throungh the EEPROM, copy the value in the array m_table[].
-        // Copy the table from EEPROM into memory for faster access and protecting the EEPROM
-    for (byte i = 0; i < CONVERSION_ARRAY_SIZE; i++)
+        // Copy the table from EEPROM into memory for faster access and protect the EEPROM
+    for (byte i = 0; i < CONVERSION_TABLE_SIZE; i++)
     {
-        EEPROM.get(i*sizeof(uint16_t), m_table[i]);
+        m_table[i] = Memory->getTableValue(i);
     }
     
 }
 
 ConversionTable::~ConversionTable()
-{
+{  
 }
 
-float ConversionTable::getLiters(const uint16_t &readValue)
+
+float ConversionTable::toLiters(const uint16_t &readValue)
 {
         // Iterate through the table to find the interval where a < readValue < b
     byte i(0);
@@ -36,6 +38,39 @@ float ConversionTable::getLiters(const uint16_t &readValue)
     float liters = linearInterpolate(i, readValue);
 
     return liters;
+}
+
+void ConversionTable::setCalibrationMode(ConversionTable::CalibState _state)
+{
+    m_CalibState = _state;
+
+    switch (_state)
+    {
+    case READING:
+        /* code */
+        break;
+    
+    case CALIB:
+        /*code*/
+        break;
+
+    default:
+        break;
+    }
+
+}
+
+bool ConversionTable::isInCalibration()
+{
+    if (m_CalibState == READING)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+    
 }
 
     // Linear interpolate : 
@@ -53,7 +88,7 @@ float ConversionTable::linearInterpolate(const byte &_a, const byte &_x)
     // byte b = a+1;
     float result =  
         (a + (x - table_a)) * ( (b+a) / ((table_b) - table_a) ) ;
-        
+
     return result;
 }
 

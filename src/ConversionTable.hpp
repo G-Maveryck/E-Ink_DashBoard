@@ -22,18 +22,26 @@ class ConversionTable
 private :
     
 public:
-    ConversionTable(EEpromManager* Accesser);
+    ConversionTable(EEpromManager* _eemPtr);
     ~ConversionTable();
+    
+    enum CalibState {READING, CALIB};
 
-    float getLiters(const uint16_t &readValue);
+    float toLiters(const uint16_t &readValue);
+    void setCalibrationMode(CalibState _state);
+    bool isInCalibration();
 
 protected:
     inline float linearInterpolate(const byte &a, const byte &x);
 
 private:
-    uint16_t m_table[CONVERSION_ARRAY_SIZE];
+    uint16_t m_table[CONVERSION_TABLE_SIZE];
 
-    EEpromManager* m_TableEEprom;
+    EEpromManager* Memory;
+    CalibState m_CalibState;
+
+
+
 };
 
 

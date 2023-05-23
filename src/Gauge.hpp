@@ -36,12 +36,8 @@ private:
     enum sIntegral {FILL, SLIP};        // State of the array : FILL and startup, then SLIP once the array is filled.
     sIntegral stateArray;               // Used for better accuracy at startup
 
-    enum sReading {READ, CALIB};
-    sReading stateGauge;
-
-    EEpromManager* m_GaugeEEprom;
-    ConversionTable* Table;      // Abstract conversion table object. See "ConversionTable.hpp" for more information
-
+    EEpromManager* GaugeMemory;     // EEpromManager object used to store information.
+    ConversionTable* Conversion;    // Abstract conversion table object. See "ConversionTable.hpp" for more information
 };
 
 

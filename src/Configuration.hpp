@@ -39,7 +39,10 @@
 #define FUEL_ARRAY_SIZE 60
 
     // This should be egal to 2*tank capacity (in liters). 18 Liters tank = 36 values.
-#define CONVERSION_ARRAY_SIZE 36
+    // This is meant to store every capacitor value per 0.5 liter.
+#define CONVERSION_TABLE_SIZE 36
+
+#define CONVTABLE_EEPROM_ADRESS 0
 
 
 #endif

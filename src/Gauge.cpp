@@ -12,18 +12,18 @@ Gauge::Gauge() :
     m_ArrayIndex(0),
     m_lvlAvrg(1), 
     currentState(6),
-    stateArray(FILL),
-    stateGauge(READ)
+    stateArray(FILL)
 {
-  m_GaugeEEprom = new EEpromManager();
-  Table = new ConversionTable(m_GaugeEEprom);
+  GaugeMemory = new EEpromManager();
+  Conversion = new ConversionTable(GaugeMemory);
 }
 
 Gauge::~Gauge()
 {
-  delete Table;
-  delete m_GaugeEEprom;
+  delete Conversion;
+  delete GaugeMemory;
 }
+
 
 void Gauge::integrateNewValue(const uint16_t& _lvl)
 {
@@ -133,5 +133,5 @@ uint8_t Gauge::curentState()
 
 uint16_t Gauge::getLevelAverage()
 {
-    return m_lvlAvrg;
+  return m_lvlAvrg;
 }
