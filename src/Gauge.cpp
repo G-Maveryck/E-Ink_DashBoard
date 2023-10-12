@@ -14,14 +14,16 @@ Gauge::Gauge() :
     currentState(6),
     stateArray(FILL)
 {
-  GaugeMemory = new EEpromManager();
-  Conversion = new ConversionTable(GaugeMemory);
+  /* GaugeMemory = new EEpromManager();
+  Conversion = new ConversionTable(GaugeMemory); */
 }
 
 Gauge::~Gauge()
 {
+  /*
   delete Conversion;
   delete GaugeMemory;
+  */
 }
 
 

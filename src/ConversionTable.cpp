@@ -40,7 +40,7 @@ float ConversionTable::toLiters(const uint16_t &readValue)
     return liters;
 }
 
-void ConversionTable::setCalibrationMode(ConversionTable::CalibState _state)
+void ConversionTable::setCalibrationMode(CalibState _state)
 {
     m_CalibState = _state;
 

@@ -12,11 +12,11 @@
 
 EEpromManager::EEpromManager(/* args */):
         m_EEprTableIndex(0),
-        m_tableComplete(false)
+        m_tableComplete(false),
+        startAdressTable(0),
+        endAdressTable(CONVERSION_TABLE_SIZE * sizeof(uint16_t)),
+        adressGaugeState(endAdressTable + sizeof(uint16_t))
 {
-    startAdressTable = 0;
-    endAdressTable = (CONVERSION_TABLE_SIZE * sizeof(uint16_t));
-    adressGaugeState = (endAdressTable + 1);
 
     bool _eeTableComplete;
     EEPROM.get(100, _eeTableComplete);      // Load the flag from the EEprom

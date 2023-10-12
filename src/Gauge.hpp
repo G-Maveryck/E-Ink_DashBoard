@@ -9,7 +9,7 @@
 
 #include <Arduino.h>
 
-#include "ConversionTable.hpp"
+// #include "ConversionTable.hpp"
 #include "Configuration.hpp"
 
 
@@ -36,8 +36,8 @@ private:
     enum sIntegral {FILL, SLIP};        // State of the array : FILL and startup, then SLIP once the array is filled.
     sIntegral stateArray;               // Used for better accuracy at startup
 
-    EEpromManager* GaugeMemory;     // EEpromManager object used to store information.
-    ConversionTable* Conversion;    // Abstract conversion table object. See "ConversionTable.hpp" for more information
+    //EEpromManager* GaugeMemory;     // EEpromManager object used to store information.
+    //ConversionTable* Conversion;    // Abstract conversion table object. See "ConversionTable.hpp" for more information
 };
 
 

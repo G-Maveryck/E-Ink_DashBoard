@@ -10,14 +10,13 @@
 #include "Screen_Configuration.h"
 #include "DebugMacro.hpp"
 
-/*
+
 #include <DallasTemperature.h>
 #include <OneWire.h>
 
 
-OneWire onewire (4);
-DallasTemperature sensors (&onewire);
-*/
+OneWire onewire(4);
+DallasTemperature tempSensor(&onewire);
 
 Display display;
 GTimer timerSensor(1000);
@@ -26,7 +25,6 @@ Gauge FuelGauge;
 
 void setup() 
 {
-  // put your setup code here, to run once:
   Serial.begin(115200);
   delay(100);
 
@@ -39,6 +37,7 @@ void setup()
   display.dispGasLevel(1);
   // delay(1000);
     
+  tempSensor.begin();
  
 
 }
@@ -51,10 +50,12 @@ void loop()
   if (timerSensor.timeOut())    //  Verify a gap of 1sec, then ask the sensor.
   { 
       // Temperature sensor 
-    int16_t tempC(0);
-    tempC = getTemp();
+    // int16_t tempC(getTemp());
 
-    display.dispAirTemp(tempC);
+    Serial.print("Temperature for the device 1 (index 0) is: ");
+    Serial.println(tempSensor.getTempCByIndex(0));
+
+    // display.dispAirTemp(tempC);
     
     //////////////////////////////////////////
 

@@ -9,7 +9,6 @@
 #include "Configuration.hpp"
 
 
-
 class EEpromManager
 {
 public:
@@ -17,7 +16,7 @@ public:
     ~EEpromManager();
 
     inline byte getLastGaugeState();
-    inline uint16_t getTableValue(const byte& index);
+    uint16_t getTableValue(const byte& index);
     inline void storeGaugeState(const byte &state);
     inline void storeNextTableValue(const uint16_t &value);
     inline bool tableFull();
@@ -28,14 +27,14 @@ protected:
 private:
     /* 
         Reminder for adressing :
-        Table start at adress 0 to 36* 2byte = 72 byte
-        Gauge state is stored at adress "table.Lengh +1", so at adress 73.
+        Table start at adress 0 to 36*2byte = 72 byte (so, end adress is 72)
+        Gauge state is stored at adress "table.Lengh + 2byte", so at adress 74.
         m_tableComplete is stored at adress 100. Beacause.
     */
 
-    static byte startAdressTable;       // Start adress of the table in the EEPROM
-    static byte endAdressTable;         // End adress of the table in the EEPROM
-    static byte adressGaugeState;       // Adress of the gauge state.
+     byte startAdressTable;       // Start adress of the conversion table in the EEPROM
+     byte endAdressTable;         // End adress of the conversion table in the EEPROM
+     byte adressGaugeState;       // Adress of the gauge state.
     
     bool m_tableComplete;       // Flag for calibration done
     byte m_EEprTableIndex;      // Index to iterate through the table when writing.
