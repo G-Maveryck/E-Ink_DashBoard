@@ -15,11 +15,11 @@ public:
     EEpromManager();
     ~EEpromManager();
 
-    inline byte getLastGaugeState();
-    uint16_t getTableValue(const byte& index);
-    inline void storeGaugeState(const byte &state);
-    inline void storeNextTableValue(const uint16_t &value);
-    inline bool tableFull();
+    byte getCurrentTableValue();       // Return the value stored in the EEprom at the current index (don't know if it's usefull...)
+    uint16_t getTableValue(const byte& index);      // 
+    void storeGaugeState(const byte &state);
+    void storeNextTableValue(const uint16_t &value);
+    bool tableFull();
 
 protected:
     void storeTableComplete(const bool& _complete);
@@ -32,9 +32,9 @@ private:
         m_tableComplete is stored at adress 100. Beacause.
     */
 
-     byte startAdressTable;       // Start adress of the conversion table in the EEPROM
-     byte endAdressTable;         // End adress of the conversion table in the EEPROM
-     byte adressGaugeState;       // Adress of the gauge state.
+    const byte startAdressTable;       // Start adress of the conversion table in the EEPROM
+    const byte endAdressTable;         // End adress of the conversion table in the EEPROM
+    const byte adressGaugeState;       // Adress of the gauge state.
     
     bool m_tableComplete;       // Flag for calibration done
     byte m_EEprTableIndex;      // Index to iterate through the table when writing.

@@ -33,7 +33,7 @@ EEpromManager::~EEpromManager()
 }
 
 
-byte EEpromManager::getLastGaugeState()
+byte EEpromManager::getCurrentTableValue()
 {
     return EEPROM.read(m_EEprTableIndex);
 }

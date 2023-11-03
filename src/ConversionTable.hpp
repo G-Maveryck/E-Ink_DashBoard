@@ -19,8 +19,6 @@
 
 class ConversionTable
 {
-private :
-    
 public:
     ConversionTable(EEpromManager* _eemPtr);
     ~ConversionTable();

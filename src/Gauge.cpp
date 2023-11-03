@@ -5,6 +5,9 @@
 #include "Gauge.hpp"
 #include "DebugMacro.hpp"
 
+#include "EEpromManager.hpp"
+#include "ConversionTable.hpp"
+
 // Constructor
 Gauge::Gauge() : 
     m_ArrTotal(0), 
@@ -13,9 +16,10 @@ Gauge::Gauge() :
     m_lvlAvrg(1), 
     currentState(6),
     stateArray(FILL)
+    //GaugeMemory(new EEpromManager);
+    //Conversion(new ConversionTable);
 {
-  /* GaugeMemory = new EEpromManager();
-  Conversion = new ConversionTable(GaugeMemory); */
+
 }
 
 Gauge::~Gauge()

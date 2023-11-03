@@ -10,6 +10,8 @@
 #include <Arduino.h>
 
 // #include "ConversionTable.hpp"
+// #include "EEpromManager.hpp"
+
 #include "Configuration.hpp"
 
 
